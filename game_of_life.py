@@ -19,7 +19,7 @@ button_text_color = (255, 255, 255)
 # Set up the grid
 rows, cols = 50, 50
 grid_size = width // rows
-grid = np.random.choice([0, 1], size=(rows, cols))
+grid = np.zeros((rows, cols), dtype=int)
 
 # Function to update the grid based on Conway's Game of Life rules
 def update_grid(grid):
@@ -36,12 +36,16 @@ def update_grid(grid):
                 new_grid[i, j] = 1
     return new_grid
 
-# Function to draw the start button
-def draw_button():
-    pygame.draw.rect(screen, button_color, (0, 0, width//2, 50))
+# Function to randomize the grid
+def randomize_grid():
+    return np.random.choice([0, 1], size=(rows, cols))
+
+# Function to draw a button
+def draw_button(x, text):
+    pygame.draw.rect(screen, button_color, (x, 0, width // 2, 50))
     font = pygame.font.Font(None, 36)
-    text = font.render("Start", True, button_text_color)
-    screen.blit(text, (width // 4 - 30, 10))
+    text_render = font.render(text, True, button_text_color)
+    screen.blit(text_render, (x + width // 4 - 30, 10))
 
 # Main game loop
 running = True
@@ -58,6 +62,10 @@ while running:
                 i, j = event.pos[1] // grid_size, event.pos[0] // grid_size
                 grid[i, j] = 1 - grid[i, j]  # Toggle the cell state
 
+            if width // 2 <= event.pos[0] <= width and 0 <= event.pos[1] <= 50:
+                # If the click is on the right half, randomize the grid
+                grid = randomize_grid()
+
     screen.fill(bg_color)
 
     # If the simulation is running, update and draw the grid
@@ -71,8 +79,12 @@ while running:
                 screen, color, (j * grid_size, i * grid_size, grid_size, grid_size)
             )
 
-    # Draw the start button
-    draw_button()
+    # Draw the Start button
+    draw_button(0, "Start")
+
+    # Draw the Randomize button
+    draw_button(width // 2, "Randomize")
+
     pygame.display.flip()
     time.sleep(0.1)  # Adjust the speed of the animation
 
