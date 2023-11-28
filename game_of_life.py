@@ -21,6 +21,7 @@ rows, cols = 50, 50
 grid_size = width // rows
 grid = np.random.choice([0, 1], size=(rows, cols))
 
+# Function to update the grid based on Conway's Game of Life rules
 def update_grid(grid):
     new_grid = grid.copy()
     for i in range(rows):
@@ -50,12 +51,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if 0 <= event.pos[0] <= width and 0 <= event.pos[1] <= 50:
+            if 0 <= event.pos[0] <= width//2 and 0 <= event.pos[1] <= 50:
                 simulation_running = not simulation_running
+            elif not simulation_running:
+                # If the simulation is not running, toggle the state of the clicked cell
+                i, j = event.pos[1] // grid_size, event.pos[0] // grid_size
+                grid[i, j] = 1 - grid[i, j]  # Toggle the cell state
 
     screen.fill(bg_color)
-
-    
 
     # If the simulation is running, update and draw the grid
     if simulation_running:
