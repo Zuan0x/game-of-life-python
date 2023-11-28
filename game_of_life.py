@@ -51,6 +51,8 @@ def draw_button(x, text, color):
 # Main game loop
 running = True
 simulation_running = False
+mouse_down = False
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -59,13 +61,22 @@ while running:
             if 0 <= event.pos[0] <= width//2 and 0 <= event.pos[1] <= 50:
                 simulation_running = not simulation_running
             elif not simulation_running:
-                # If the simulation is not running, toggle the state of the clicked cell
+                mouse_down = True
                 i, j = event.pos[1] // grid_size, event.pos[0] // grid_size
                 grid[i, j] = 1 - grid[i, j]  # Toggle the cell state
-
             if width // 2 <= event.pos[0] <= width and 0 <= event.pos[1] <= 50:
                 # If the click is on the right half, randomize the grid
                 grid = randomize_grid()
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            mouse_down = False
+        elif event.type == pygame.MOUSEMOTION and mouse_down:
+            if not simulation_running:
+                i, j = event.pos[1] // grid_size, event.pos[0] // grid_size
+                if i < rows and j < cols:
+                    grid[i, j] = 1
+
+            
 
     screen.fill(bg_color)
 
