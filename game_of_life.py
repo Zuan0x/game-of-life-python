@@ -13,7 +13,8 @@ pygame.display.set_caption("Conway's Game of Life")
 # Set up the colors
 bg_color = (255, 255, 255)
 cell_color = (0, 0, 0)
-button_color = (50, 150, 50)  # Adjusted button color
+start_button_color = (50, 150, 50)
+randomise_button_color = (150, 50, 150)
 button_text_color = (255, 255, 255)
 
 # Set up the grid
@@ -41,8 +42,8 @@ def randomize_grid():
     return np.random.choice([0, 1], size=(rows, cols))
 
 # Function to draw a button
-def draw_button(x, text):
-    pygame.draw.rect(screen, button_color, (x, 0, width // 2, 50))
+def draw_button(x, text, color):
+    pygame.draw.rect(screen, color, (x, 0, width // 2, 50))
     font = pygame.font.Font(None, 36)
     text_render = font.render(text, True, button_text_color)
     screen.blit(text_render, (x + width // 4 - 30, 10))
@@ -80,10 +81,10 @@ while running:
             )
 
     # Draw the Start button
-    draw_button(0, "Start")
+    draw_button(0, "Start", start_button_color)
 
     # Draw the Randomize button
-    draw_button(width // 2, "Randomize")
+    draw_button(width // 2, "Randomize", randomise_button_color)
 
     pygame.display.flip()
     time.sleep(0.1)  # Adjust the speed of the animation
