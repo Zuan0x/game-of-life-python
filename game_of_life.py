@@ -13,6 +13,8 @@ pygame.display.set_caption("Conway's Game of Life")
 # Set up the colors
 bg_color = (255, 255, 255)
 cell_color = (0, 0, 0)
+button_color = (50, 150, 50)  # Adjusted button color
+button_text_color = (255, 255, 255)
 
 # Set up the grid
 rows, cols = 50, 50
@@ -33,17 +35,32 @@ def update_grid(grid):
                 new_grid[i, j] = 1
     return new_grid
 
+# Function to draw the start button
+def draw_button():
+    pygame.draw.rect(screen, button_color, (0, 0, width//2, 50))
+    font = pygame.font.Font(None, 36)
+    text = font.render("Start", True, button_text_color)
+    screen.blit(text, (width // 4 - 30, 10))
+
 # Main game loop
 running = True
+simulation_running = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if 0 <= event.pos[0] <= width and 0 <= event.pos[1] <= 50:
+                simulation_running = not simulation_running
 
     screen.fill(bg_color)
 
-    # Update and draw the grid
-    grid = update_grid(grid)
+    
+
+    # If the simulation is running, update and draw the grid
+    if simulation_running:
+        grid = update_grid(grid)
+
     for i in range(rows):
         for j in range(cols):
             color = cell_color if grid[i, j] == 1 else bg_color
@@ -51,6 +68,8 @@ while running:
                 screen, color, (j * grid_size, i * grid_size, grid_size, grid_size)
             )
 
+    # Draw the start button
+    draw_button()
     pygame.display.flip()
     time.sleep(0.1)  # Adjust the speed of the animation
 
